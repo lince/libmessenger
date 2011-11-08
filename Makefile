@@ -2,7 +2,10 @@ CC= g++
 HEADERS_DIR= /usr/local/include/libmessenger
 LIB_DIR= /usr/local/lib
 TARGET_LIB= libmessenger.so
-PROGS= $(TARGET_LIB) amazontest
+PROGS= $(TARGET_LIB) test/amazontest
+
+ACTIVEMQ_HOME=/usr/local/include/activemq-cpp-3.4.0
+APR_HOME=/usr/local/apr
 
 INCLUDES=	\
 			include/Messenger.h \
@@ -11,21 +14,20 @@ INCLUDES=	\
 SOURCES=	\
 			src/Messenger.cpp
 			
-LIBS= 		-lcpputil -lactivemq-cpp -lssl
+LIBS= 		-lcpputil -lactivemq-cpp
 
-PATHS= -I/usr/local/include/activemq-cpp-3.4.0/ -I/usr/local/apr/include/apr-1/
+PATHS= -I$(ACTIVEMQ_HOME) -I$(APR_HOME)/include/apr-1/
 
 INSTALL_HEADERS = $(INCLUDES)
 
 ALL: $(PROGS)
 
 $(TARGET_LIB): $(INCLUDES) $(SOURCES)
-	$(CC) $(SOURCES) $(LIBS) $(PATHS) \
-		-shared -fPIC -o $(TARGET_LIB)
+	$(CC) $(SOURCES) $(LIBS) $(PATHS)\
+		-shared -o $(TARGET_LIB) -g
 		
-amazontest: $(TARGET_LIB) test/amazontest.cpp
-	$(CC) test/amazontest.cpp -o test/amazontest $(PATHS) -L. -I./include -lmessenger
-		
+test/amazontest: $(TARGET_LIB) test/amazontest.cpp
+	$(CC) test/amazontest.cpp -o test/amazontest $(PATHS) -L. -I./include -lmessenger -lactivemq-cpp -g
 		
 clean:
 	rm -f $(PROGS)

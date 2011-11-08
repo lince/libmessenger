@@ -4,10 +4,12 @@
  *  Created on: Aug 25, 2011
  *      Author: caioviel
  */
-#include <Messenger.h>
+
+#include "../include/Messenger.h"
 using namespace messenger;
 
 #include <iostream>
+using namespace std;
 
 class SimpleListener : public MsgListener {
 
@@ -30,12 +32,14 @@ int main(int argc, char* argv[]) {
     std::string destURI = "TVMONITOR.TUNER0.C";
     std::string origURI = "TVMONITOR.TUNER0.P";
 
+    cout << "This is a message before the constructor." << endl;
+
 	string str = "{ \"notification\" : { \"channel\" : 6, \"id\" : 1, \"label\""
 			" : \"Alguma coisa aconteceu?\", \"options\" : [ { \"id\" : 1, \"label\" "
 			": \"Sim\" }, { \"id\" : 2, \"label\" : \"Nao\" } ], \"type\" : \"multiply\" } }";
 
 	Messenger* messenger = new Messenger(brokerURI, destURI, destURI);
-	messenger->setMsgListener( new SimpleListener() );
+	/*messenger->setMsgListener( new SimpleListener() );
 	messenger->connect();
 
 	//sleep(1);
@@ -45,7 +49,7 @@ int main(int argc, char* argv[]) {
 	sleep(1);
 
 	messenger->disconnect();
-	activemq::library::ActiveMQCPP::shutdownLibrary();
+	activemq::library::ActiveMQCPP::shutdownLibrary();*/
 	return 0;
 }
 

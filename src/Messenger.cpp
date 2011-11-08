@@ -6,6 +6,8 @@
  */
 
 #include "../include/Messenger.h"
+using namespace cpputil::logger;
+using namespace std;
 
 #include <cassert>
 
@@ -17,11 +19,9 @@ Messenger::Messenger(
 		const std::string& origURI,
 		bool useTopic,
 		bool clientAck,
-		bool persistent) {
+		bool persistent) : Loggable("messenger::Messenger") {
 
-	logger = cpputil::logger::Logger::getInstance();
-	logger->registerClass(this, "messenger::Messenger");
-	TRACE(logger, "Constructor");
+	trace(" begin constructor");
 
 	static bool isInitialized = false;
 	//TODO: sincronizacao
@@ -48,12 +48,14 @@ Messenger::Messenger(
 }
 
 Messenger::~Messenger() throw() {
-	TRACE(logger, "Destructor");
+	trace("begin destructor");
+
 	this->cleanup();
 }
 
 void Messenger::connect() {
-	TRACE(logger, "connect()");
+	trace("begin connect()");
+
 	if (!msgListener) {
 		throw cpputil::InitializationException(
 				"Trying to connect without informing the MsgListener",
@@ -109,17 +111,19 @@ void Messenger::connect() {
 		//e.printStackTrace();
 		ostringstream ostr;
 		e.printStackTrace(ostr);
-		ERROR(logger, ostr.str());
+		error(ostr.str());
 	}
 }
 
 void Messenger::disconnect() {
-	TRACE(logger, "disconnect()");
+	trace("begin disconnect()");
+
 	this->cleanup();
 }
 
 void Messenger::sendMessage(const std::string& strMessage) {
 	TRACE(logger, "sendMessage(cons string&)");
+
 	try {
 	    TextMessage* message = session->createTextMessage( strMessage );
 	    producer->send( message );
@@ -138,7 +142,7 @@ void Messenger::setMsgListener(MsgListener* msgListener) {
 
 // Called from the consumer since this class is a registered MessageListener.
 void Messenger::onMessage( const Message* message ) throw() {
-	TRACE(logger, "onMessage(const Message* )");
+	trace(" begin onMessage(const Message* )");
 
 	static int count = 0;
 
@@ -171,20 +175,20 @@ void Messenger::onMessage( const Message* message ) throw() {
 // If something bad happens you see it here as this class is also been
 // registered as an ExceptionListener with the connection.
 void Messenger::onException( const CMSException& ex AMQCPP_UNUSED ) {
-	ERROR(logger, "CMS Exception occurred");
+	error("CMS Exception occurred");
 	throw ex;
 }
 
 void Messenger::transportInterrupted() {
-	INFO(logger, "The Connection's Transport has been Interrupted.");
+	info("The Connection's Transport has been Interrupted.");
 }
 
 void Messenger::transportResumed() {
-	INFO(logger, "The Connection's Transport has been Restored.");
+	info("The Connection's Transport has been Restored.");
 }
 
 void Messenger::cleanup(){
-	TRACE(logger, "cleanup()");
+	trace("begin cleanup()");
 
 	try{
 		if( destinationProducer != NULL ) delete destinationProducer;

@@ -8,7 +8,7 @@
 #ifndef MSGLISTENER_H_
 #define MSGLISTENER_H_
 
-#include <cpputil/logger/Logger.h>
+#include <string>
 
 namespace messenger {
 

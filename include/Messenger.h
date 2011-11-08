@@ -30,8 +30,8 @@
 #include <iostream>
 #include <string>
 
-#include <cpputil/logger/Logger.h>
-#include <cpputil/InitializationException.h>
+#include <libcpputil/logger/Logger.h>
+#include <libcpputil/InitializationException.h>
 
 #include "MsgListener.h"
 
@@ -42,7 +42,6 @@ using namespace decaf::lang;
 using namespace decaf::util;
 using namespace decaf::util::concurrent;
 using namespace cms;
-using namespace std;
 
 namespace messenger {
 
@@ -91,7 +90,7 @@ public:
 
 	virtual void transportResumed();
 
-	void sendMessage(const string& text);
+	void sendMessage(const std::string& text);
 
 	void setMsgListener(MsgListener* msgListener);
 
