@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
 			": \"Sim\" }, { \"id\" : 2, \"label\" : \"Nao\" } ], \"type\" : \"multiply\" } }";
 
 	Messenger* messenger = new Messenger(brokerURI, destURI, destURI);
-	/*messenger->setMsgListener( new SimpleListener() );
+	messenger->setMsgListener( new SimpleListener() );
 	messenger->connect();
 
 	//sleep(1);
@@ -49,7 +49,7 @@ int main(int argc, char* argv[]) {
 	sleep(1);
 
 	messenger->disconnect();
-	activemq::library::ActiveMQCPP::shutdownLibrary();*/
+	activemq::library::ActiveMQCPP::shutdownLibrary();
 	return 0;
 }
 

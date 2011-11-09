@@ -4,7 +4,7 @@ LIB_DIR= /usr/local/lib
 TARGET_LIB= libmessenger.so
 PROGS= $(TARGET_LIB) test/amazontest
 
-ACTIVEMQ_HOME=/usr/local/include/activemq-cpp-3.4.0
+ACTIVEMQ_HOME=/usr/local/include/activemq-cpp-3.5.0
 APR_HOME=/usr/local/apr
 
 INCLUDES=	\
