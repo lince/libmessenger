@@ -122,7 +122,7 @@ void Messenger::disconnect() {
 }
 
 void Messenger::sendMessage(const std::string& strMessage) {
-	TRACE(logger, "sendMessage(cons string&)");
+	trace("sendMessage(cons string&)");
 
 	try {
 	    TextMessage* message = session->createTextMessage( strMessage );
@@ -161,7 +161,7 @@ void Messenger::onMessage( const Message* message ) throw() {
 		}
 
 		message->acknowledge();
-		DEBUG(logger, (string) "Message Received: " + text)
+		debug("Message Received: " + text);
 		msgListener->receiveMsg(text);
 
 	} catch (CMSException& e) {
