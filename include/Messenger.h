@@ -33,7 +33,7 @@
 #include <libcpputil/logger/Logger.h>
 #include <libcpputil/InitializationException.h>
 
-#include "MsgListener.h"
+#include "IMessenger.h"
 
 using namespace activemq;
 using namespace activemq::core;
@@ -48,7 +48,42 @@ namespace messenger {
 class Messenger : 	public ExceptionListener,
 					public MessageListener,
 					public DefaultTransportListener,
+					public IMessenger,
 					public cpputil::logger::Loggable {
+
+public:
+	Messenger(
+			const std::string& brokerURI,
+			const std::string& destURI,
+			const std::string& origURI,
+			bool useTopic = true,
+			bool clientAck = true,
+			bool persistent = true);
+
+	virtual ~Messenger() throw();
+
+	virtual void connect();
+
+	virtual void disconnect();
+
+	virtual void sendMessage(const std::string& text);
+
+	virtual void setMessengerListener(IMessengerListener* msgListener);
+
+
+	/* CMS Listeners */
+	virtual void onMessage( const Message* message ) throw();
+
+	virtual void onException( const CMSException& ex AMQCPP_UNUSED );
+
+	virtual void transportInterrupted();
+
+	virtual void transportResumed();
+
+private:
+
+	void cleanup();
+
 private:
 	Connection* connection;
 	Session* session;
@@ -64,39 +99,9 @@ private:
 	bool useTopic;
 	bool clientAck;
 	bool persistent;
-	MsgListener* msgListener;
+	IMessengerListener* msgListener;
 	cpputil::logger::Logger* logger;
 
-public:
-	Messenger(
-			const std::string& brokerURI,
-			const std::string& destURI,
-			const std::string& origURI,
-			bool useTopic = true,
-			bool clientAck = true,
-			bool persistent = true);
-
-	virtual ~Messenger() throw();
-
-	void connect();
-
-	void disconnect();
-
-	virtual void onMessage( const Message* message ) throw();
-
-	virtual void onException( const CMSException& ex AMQCPP_UNUSED );
-
-	virtual void transportInterrupted();
-
-	virtual void transportResumed();
-
-	void sendMessage(const std::string& text);
-
-	void setMsgListener(MsgListener* msgListener);
-
-private:
-
-	void cleanup();
 };
 
 } /* namespace messenger */

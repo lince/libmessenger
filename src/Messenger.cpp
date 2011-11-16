@@ -132,11 +132,12 @@ void Messenger::sendMessage(const std::string& strMessage) {
 	} catch (cms::CMSException& e) {
 		ostringstream ostr;
 		e.printStackTrace(ostr);
-		ERROR(logger, ostr.str());
+		error(ostr.str());
 	}
 }
 
-void Messenger::setMsgListener(MsgListener* msgListener) {
+void Messenger::setMessengerListener(IMessengerListener* msgListener) {
+	trace("setMessengerListener(IMessengerListener*)");
 	assert(msgListener);
 	this->msgListener = msgListener;
 }
