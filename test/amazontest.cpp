@@ -5,11 +5,12 @@
  *      Author: caioviel
  */
 
+#include <iostream>
+using namespace std;
+
 #include "../include/Messenger.h"
 using namespace messenger;
 
-#include <iostream>
-using namespace std;
 
 class SimpleListener : public MsgListener {
 

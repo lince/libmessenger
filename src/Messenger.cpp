@@ -10,6 +10,7 @@ using namespace cpputil::logger;
 using namespace std;
 
 #include <cassert>
+#include <string>
 
 namespace messenger {
 
@@ -156,7 +157,7 @@ void Messenger::onMessage( const Message* message ) throw() {
 		if( textMessage != NULL ) {
 			text = textMessage->getText();
 		} else {
-			WARNING(logger, "A Non-Text message was received.");
+			warning("A Non-Text message was received.");
 			return;
 		}
 
