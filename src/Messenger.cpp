@@ -164,7 +164,7 @@ void Messenger::onMessage( const Message* message ) throw() {
 
 		message->acknowledge();
 		debug("Message Received: " + text);
-		msgListener->receiveMsg(text);
+		msgListener->receiveMessage(text);
 
 	} catch (CMSException& e) {
 		//e.printStackTrace();

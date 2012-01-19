@@ -1,1 +1,46 @@
-Teste
+--------------------Dependencies--------------------
+
+-- ActiveMQ (Version 3.5.0)
+-- libcpputil (Version 1.0) -> https://github.com/lince/libcpputil
+
+--------Compiling ActiveMQ 3.5.0 from source--------
+
+ActiveMQ Dependencies:
+-- libuuid
+-- autoconf
+-- libtool
+-- openssl
+-- CppUnit
+-- apr
+-- apr-util
+
+Installing dependencies:
+ $ sudo apt-get install libcppunit-dev uuid-dev autoconf libtool libssl-dev libssl0.9.8
+
+Building apr:
+ $ ./configure
+ $ make
+ $ sudo make install
+
+Building apr-util:
+ $ ./configure with_apr=../apr-1.4.5/ 
+ $ make
+ $ sudo make install
+
+Get the code from svn:
+ $ svn co https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk activemq-cpp
+ 
+Building:
+ $ cd activemq-cpp/activemq-cpp
+ $ ./autogen
+ $ ./configure
+ $ make
+ $ sudo make install
+ 
+--------------Building libmessenger ---------------
+ $ cd libmessenger
+ $ mkdir build
+ $ cd build
+ $ cmake ..
+ $ make
+ $ sudo make install
