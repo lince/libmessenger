@@ -33,13 +33,32 @@
 
 namespace messenger {
 
+/**
+ * This class is used to create instances of Messeger.
+ */
 class MessengerFactory : public cpputil::logger::Loggable {
 
 public:
+	/**
+	 * Constructor
+	 */
 	MessengerFactory();
 
+	/**
+	 * Destructor
+	 */
 	virtual ~MessengerFactory();
 
+	/**
+	 * This method creates a new instance of Messenger.
+	 * @param brokerURI The URI of the broker that the Messenger will be connected.
+	 * @param destURI The URI of the topic/queue to where the messages will be sent.
+	 * @param origURI The URI of the topic/queu from where the nessages will be received.
+	 * @param useTopic if true, the communication will be proceed using topic, false it will use queue
+	 * @param clientAck if true, clients will receive ack for each message they send.
+	 * @param persistent if true, the messages will be persistent on the broker.
+	 * @return The Messenger instance created.
+	 */
 	IMessenger* CreateMessenger(
 			const std::string& brokerURI,
 			const std::string& destURI,
