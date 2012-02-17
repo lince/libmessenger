@@ -41,6 +41,7 @@ TARGET_LINK_LIBRARIES(messenger cpputil activemq-cpp)
 # Install Options
 INSTALL (TARGETS messenger LIBRARY DESTINATION lib)
 
+	 * @param messageStr
 # INSTALL (TARGETS messenger ARCHIVE DESTINATION lib)
 
 INSTALL (FILES ${install_headers} DESTINATION include/libmessenger)
