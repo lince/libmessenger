@@ -21,14 +21,14 @@ class SimpleListener : public IMessengerListener {
 };
 
 int main(int argc, char* argv[]) {
-    std::string brokerURI =
-          "failover:(tcp://demoiselle.i-brasil.com:61616"
-//        "?wireFormat=openwire"
-//        "&connection.useAsyncSend=true"
-//        "&transport.commandTracingEnabled=true"
-//        "&transport.tcpTracingEnabled=true"
-//        "&wireFormat.tightEncodingEnabled=true"
-        ")";
+	std::string brokerURI =
+			"failover:(tcp://200.18.98.23:61616?jms.watchTopicAdvisories=false"
+			//        "&wireFormat=openwire"
+			//        "&connection.useAsyncSend=true"
+			//        "&transport.commandTracingEnabled=true"
+			//        "&transport.tcpTracingEnabled=true"
+			//        "&wireFormat.tightEncodingEnabled=true"
+			")";
 
     std::string destURI = "TVMONITOR.TUNER0.C";
     std::string origURI = "TVMONITOR.TUNER0.P";

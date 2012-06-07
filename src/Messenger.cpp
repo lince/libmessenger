@@ -1,13 +1,35 @@
-/*
- * MessengerReceiver.cpp
+/**
+ * File: Messenger.cpp
+ * Created by: Caio César Viel
+ * Contact: caioviel@gmail.com
+ * Last Modification: 02-16-2012
  *
- *  Created on: Sep 15, 2011
- *      Author: caioviel
+ * Copyright (c) 2012 LINCE-UFSCar
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this
+ * software and associated documentation files (the "Software"), to deal in the Software
+ * without restriction, including without limitation the rights to use, copy, modify,
+ * merge, publish, distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies
+ * or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ * INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+ * PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE
+ * FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+ * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 #include "../include/Messenger.h"
+using namespace cpputil::logger;
+using namespace std;
 
 #include <cassert>
+#include <string>
 
 namespace messenger {
 
@@ -17,11 +39,9 @@ Messenger::Messenger(
 		const std::string& origURI,
 		bool useTopic,
 		bool clientAck,
-		bool persistent) {
+		bool persistent) : Loggable("messenger::Messenger") {
 
-	logger = cpputil::logger::Logger::getInstance();
-	logger->registerClass(this, "messenger::Messenger");
-	TRACE(logger, "Constructor");
+	trace(" begin constructor");
 
 	static bool isInitialized = false;
 	//TODO: sincronizacao
@@ -48,12 +68,14 @@ Messenger::Messenger(
 }
 
 Messenger::~Messenger() throw() {
-	TRACE(logger, "Destructor");
+	trace("begin destructor");
+
 	this->cleanup();
 }
 
 void Messenger::connect() {
-	TRACE(logger, "connect()");
+	trace("begin connect()");
+
 	if (!msgListener) {
 		throw cpputil::InitializationException(
 				"Trying to connect without informing the MsgListener",
@@ -106,20 +128,25 @@ void Messenger::connect() {
 		consumer->setMessageListener( this );
 
 	} catch (cms::CMSException& e) {
-		//e.printStackTrace();
 		ostringstream ostr;
 		e.printStackTrace(ostr);
-		ERROR(logger, ostr.str());
+		error(ostr.str());
+		throw cpputil::InitializationException(
+				e.what(),
+				"messenger::Messenger",
+				"connect()");
 	}
 }
 
 void Messenger::disconnect() {
-	TRACE(logger, "disconnect()");
+	trace("begin disconnect()");
+
 	this->cleanup();
 }
 
 void Messenger::sendMessage(const std::string& strMessage) {
-	TRACE(logger, "sendMessage(cons string&)");
+	trace("sendMessage(cons string&)");
+
 	try {
 	    TextMessage* message = session->createTextMessage( strMessage );
 	    producer->send( message );
@@ -127,18 +154,23 @@ void Messenger::sendMessage(const std::string& strMessage) {
 	} catch (cms::CMSException& e) {
 		ostringstream ostr;
 		e.printStackTrace(ostr);
-		ERROR(logger, ostr.str());
+		error(ostr.str());
+		throw cpputil::IllegalParameterException(
+				e.what(),
+				"messenger::Messenger",
+				"connect()");
 	}
 }
 
-void Messenger::setMsgListener(MsgListener* msgListener) {
+void Messenger::setMessengerListener(IMessengerListener* msgListener) {
+	trace("setMessengerListener(IMessengerListener*)");
 	assert(msgListener);
 	this->msgListener = msgListener;
 }
 
 // Called from the consumer since this class is a registered MessageListener.
 void Messenger::onMessage( const Message* message ) throw() {
-	TRACE(logger, "onMessage(const Message* )");
+	trace(" begin onMessage(const Message* )");
 
 	static int count = 0;
 
@@ -152,39 +184,39 @@ void Messenger::onMessage( const Message* message ) throw() {
 		if( textMessage != NULL ) {
 			text = textMessage->getText();
 		} else {
-			WARNING(logger, "A Non-Text message was received.");
+			warning("A Non-Text message was received.");
 			return;
 		}
 
 		message->acknowledge();
-		DEBUG(logger, (string) "Message Received: " + text)
-		msgListener->receiveMsg(text);
+		debug("Message Received: " + text);
+		msgListener->receiveMessage(text);
 
 	} catch (CMSException& e) {
 		//e.printStackTrace();
 		ostringstream ostr;
 		e.printStackTrace(ostr);
-		ERROR(logger, ostr.str());
+		error(ostr.str());
 	}
 }
 
 // If something bad happens you see it here as this class is also been
 // registered as an ExceptionListener with the connection.
 void Messenger::onException( const CMSException& ex AMQCPP_UNUSED ) {
-	ERROR(logger, "CMS Exception occurred");
+	error("CMS Exception occurred");
 	throw ex;
 }
 
 void Messenger::transportInterrupted() {
-	INFO(logger, "The Connection's Transport has been Interrupted.");
+	info("The Connection's Transport has been Interrupted.");
 }
 
 void Messenger::transportResumed() {
-	INFO(logger, "The Connection's Transport has been Restored.");
+	info("The Connection's Transport has been Restored.");
 }
 
 void Messenger::cleanup(){
-	TRACE(logger, "cleanup()");
+	trace("begin cleanup()");
 
 	try{
 		if( destinationProducer != NULL ) delete destinationProducer;

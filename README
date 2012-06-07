@@ -1,0 +1,100 @@
+-------------------- Library Messenger --------------------
+
+The library messenger is a layer over the cms library. It's created to allows a very simple communication with activemq-broker.
+Although it doesn't have all the featuras of the CMS library, it covers to must used services in a very simple
+and easy-to-use API.
+
+--------------------Dependencies--------------------
+
+The main dependency is the CMS, the activemq c++ library. The process to compile and install the CMS is detailed bellow.
+
+-- CMS (Version 3.5.0) -> http://activemq.apache.org/activemq-c-clients.html
+-- libcpputil (Version 1.0) -> https://github.com/lince/libcpputil
+
+--------Compiling CMS 3.5.0 from source--------
+
+The CMS dependencies are the follows:
+
+-- libuuid
+-- autoconf
+-- libtool
+-- openssl
+-- CppUnit
+-- apr
+-- apr-util
+
+All the dependencies excluding the two last can be installed in Debian-Based OS (like Ubuntu) with the command:
+
+ $ sudo apt-get install libcppunit-dev uuid-dev autoconf libtool libssl-dev libssl0.9.8
+
+Building apr:
+ $ ./configure
+ $ make
+ $ sudo make install
+
+Building apr-util:
+ $ ./configure with_apr=../apr-1.4.5/ 
+ $ make
+ $ sudo make install
+
+Finally, to build the CMS:
+
+Get the code from svn:
+ $ svn co https://svn.apache.org/repos/asf/activemq/activemq-cpp/trunk activemq-cpp
+ 
+Building:
+ $ cd activemq-cpp/activemq-cpp
+ $ ./autogen
+ $ ./configure
+ $ make
+ $ sudo make install
+
+The CMS's building process will take a long time.
+ 
+--------------Building libmessenger ---------------
+
+After installing the dependencies, building the libmessenger is a easy process:
+
+ $ cd libmessenger
+ $ mkdir build
+ $ cd build
+ $ cmake ..
+ $ make
+ $ sudo make install
+ 
+ Optionaly, you also can generate the documentation of the library, in the root directory:
+ 
+ $ dogygen
+
+-------------------- Directories Structure --------------------
+
+The root director libmessenger contains three directories and, due to installing process, two more can be generated.
+The directories and their descriptions are the following:
+
+-> include: It's here that the c++ headers file are.
+-> src: It's here that the c++ source files of the library are.
+-> test: It's here that several programs designed to test our library are. You can use it as samples code.
+-> build: This directory is used durring the compilation process. You can delete it if you want.
+-> doc: It's that the doxygen puts the generated documentation files.
+
+ 
+ -------------- Using libmessenger ---------------
+ 
+To use the library you need to include the headers in your files and link the library -lmessenger in your code.
+
+For code samples, see the directory test. For API documentation, see the test director.
+
+-------------------- The MIT License (MIT) --------------------
+
+Copyright (c) 2012 LINCE-UFSCar
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+-------------------- Contact --------------------
+
+You can access our page on github: https://github.com/lince/libcpputil
+Or send e-mail directly to the developer: caioviel@gmail.com
