@@ -54,14 +54,6 @@
 
 #include "IMessenger.h"
 
-using namespace activemq;
-using namespace activemq::core;
-using namespace activemq::transport;
-using namespace decaf::lang;
-using namespace decaf::util;
-using namespace decaf::util::concurrent;
-using namespace cms;
-
 namespace messenger {
 
 /**
@@ -139,12 +131,12 @@ private:
 	void cleanup();
 
 private:
-	Connection* connection;
-	Session* session;
-	Destination* destinationConsumer;
-	Destination* destinationProducer;
-	MessageConsumer* consumer;
-    MessageProducer* producer;
+	cms::Connection* connection;
+	cms::Session* session;
+	cms::Destination* destinationConsumer;
+	cms::Destination* destinationProducer;
+	cms::MessageConsumer* consumer;
+	cms::MessageProducer* producer;
 
 	std::string brokerURI;
 	std::string destURI;
@@ -154,7 +146,6 @@ private:
 	bool clientAck;
 	bool persistent;
 	IMessengerListener* msgListener;
-	cpputil::logger::Logger* logger;
 
 };
 

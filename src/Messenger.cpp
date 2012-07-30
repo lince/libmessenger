@@ -28,6 +28,14 @@
 using namespace cpputil::logger;
 using namespace std;
 
+using namespace activemq;
+using namespace activemq::core;
+using namespace activemq::transport;
+using namespace decaf::lang;
+using namespace decaf::util;
+using namespace decaf::util::concurrent;
+using namespace cms;
+
 #include <cassert>
 #include <string>
 
