@@ -17,15 +17,19 @@ SET(include_files
 			include/IMessenger.h
 			include/IMessengerListener.h    
 			include/MessengerFactory.h   
-			include/Messenger.h)
+			include/Messenger.h
+			include/IBrokerConnection.h
+			include/BrokerConnection.h)
 			
 SET(src_files     
 			src/Messenger.cpp
-			src/MessengerFactory.cpp)
+			src/MessengerFactory.cpp
+			src/BrokerConnection.cpp)
 
 SET(install_headers 
 			include/IMessenger.h
-			include/IMessengerListener.h    
+			include/IMessengerListener.h
+			include/IBrokerConnection.h    
 			include/MessengerFactory.h)
 
 INCLUDE_DIRECTORIES(

@@ -30,6 +30,7 @@
 #include <libcpputil/logger/Loggable.h>
 
 #include "IMessenger.h"
+#include "IBrokerConnection.h"
 
 namespace messenger {
 
@@ -66,6 +67,17 @@ public:
 			bool useTopic = true,
 			bool clientAck = true,
 			bool persistent = true);
+
+	IMessenger* CreateMessenger(
+				IBrokerConnection* connection,
+				const std::string& destURI,
+				const std::string& origURI,
+				bool useTopic = true,
+				bool persistent = true);
+
+	IBrokerConnection* CreateBrokerConnection(
+				const std::string& brokerURI,
+				bool clientAck = true);
 };
 
 } /* namespace messenger */

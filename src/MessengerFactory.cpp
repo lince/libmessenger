@@ -27,6 +27,7 @@
 #include "../include/MessengerFactory.h"
 
 #include "../include/Messenger.h"
+#include "../include/BrokerConnection.h"
 
 namespace messenger {
 
@@ -47,6 +48,25 @@ IMessenger *MessengerFactory::CreateMessenger(
 		bool useTopic, bool clientAck, bool persistent) {
 
 	return new Messenger(brokerURI, destURI, origURI, useTopic, clientAck, persistent);
+}
+
+IMessenger* CreateMessenger(
+			IBrokerConnection* connection,
+			const std::string& destURI,
+			const std::string& origURI,
+			bool useTopic,
+			bool persistent) {
+
+	return new Messenger(connection, destURI, origURI, useTopic, persistent);
+
+}
+
+IBrokerConnection* CreateBrokerConnection(
+			const std::string& brokerURI,
+			bool clientAck) {
+
+	return new BrokerConnection(brokerURI, clientAck);
+
 }
 
 } /* namespace messenger */

@@ -25,6 +25,7 @@
  */
 
 #include "../include/Messenger.h"
+#include "../include/BrokerConnection.h"
 using namespace cpputil::logger;
 using namespace std;
 
@@ -39,7 +40,33 @@ using namespace cms;
 #include <cassert>
 #include <string>
 
+
 namespace messenger {
+
+Messenger::Messenger(
+		IBrokerConnection* brokerConnection,
+		const std::string& destURI,
+		const std::string& origURI,
+		bool useTopic,
+		bool persistent) : Loggable("messenger::Messenger") {
+
+	trace("begin constructor with IBrokerConnection");
+	assert(brokerConnection);
+
+	this->brokerConnection = brokerConnection;
+
+	destinationConsumer = NULL;
+	destinationProducer = NULL;
+	consumer = NULL;
+	producer = NULL;
+	msgListener = NULL;
+
+	this->destURI = destURI;
+	this->origURI = origURI;
+
+	this->useTopic = useTopic;
+	this->persistent = persistent;
+}
 
 Messenger::Messenger(
 		const std::string& brokerURI,
@@ -49,7 +76,7 @@ Messenger::Messenger(
 		bool clientAck,
 		bool persistent) : Loggable("messenger::Messenger") {
 
-	trace(" begin constructor");
+	trace("begin constructor without IBrokerConnection");
 
 	static bool isInitialized = false;
 	//TODO: sincronizacao
@@ -58,8 +85,8 @@ Messenger::Messenger(
 		isInitialized =  true;
 	}
 
-	connection = NULL;
-	session = NULL;
+	//connection = NULL;
+	//session = NULL;
 	destinationConsumer = NULL;
 	destinationProducer = NULL;
 	consumer = NULL;
@@ -71,7 +98,7 @@ Messenger::Messenger(
 	this->origURI = origURI;
 
 	this->useTopic = useTopic;
-	this->clientAck = clientAck;
+	//this->clientAck = clientAck;
 	this->persistent = persistent;
 }
 
@@ -91,29 +118,13 @@ void Messenger::connect() {
 				"connect()");
 	}
 
+	if (!brokerConnection->isConnected()) {
+		brokerConnection->connect();
+		BrokerConnection* bConnection = dynamic_cast<BrokerConnection*>(brokerConnection);
+		session = bConnection->getCMSSession();
+	}
+
 	try {
-
-		// Create a ConnectionFactory
-		std::auto_ptr<activemq::core::ActiveMQConnectionFactory>
-		connectionFactory(
-				new activemq::core::ActiveMQConnectionFactory(brokerURI));
-
-		// Create a Connection
-		try {
-			connection = connectionFactory->createConnection();
-			connection->start();
-		} catch (cms::CMSException& e) {
-			e.printStackTrace();
-			throw e;
-		}
-
-		// Create a Session
-		if (clientAck) {
-			session = connection->createSession(
-					cms::Session::CLIENT_ACKNOWLEDGE);
-		} else {
-			session = connection->createSession(cms::Session::AUTO_ACKNOWLEDGE);
-		}
 
 		// Create the destination (Topic or Queue)
 		if (useTopic) {
@@ -245,24 +256,6 @@ void Messenger::cleanup(){
 		if( producer != NULL ) delete producer;
 	} catch (CMSException& e) {}
 	producer = NULL;
-
-	// Close open resources.
-	try{
-		if( session != NULL ) session->close();
-		if( connection != NULL ) connection->close();
-	}catch (CMSException& e) {}
-
-	// Now Destroy them
-	try{
-		if( session != NULL ) delete session;
-	}catch (CMSException& e) {}
-	session = NULL;
-
-	try{
-		if( connection != NULL ) delete connection;
-	}catch (CMSException& e) {}
-	connection = NULL;
-
 }
 
 } /* namespace messenger */

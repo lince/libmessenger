@@ -49,12 +49,18 @@
 #include <iostream>
 #include <string>
 
+
 #include <libcpputil/logger/Logger.h>
 #include <libcpputil/InitializationException.h>
 
+#include "IBrokerConnection.h"
+
 namespace messenger {
 
-class BrokerConnection {
+class BrokerConnection :
+							public IBrokerConnection,
+							public cpputil::logger::Loggable {
+
 public:
 
 	BrokerConnection(
@@ -79,8 +85,8 @@ public:
 
 
 private:
-	Connection* connection;
-	Session* session;
+	cms::Connection* connection;
+	cms::Session* session;
 
 	std::string brokerURI;
 

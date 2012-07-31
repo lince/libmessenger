@@ -53,6 +53,7 @@
 #include <libcpputil/InitializationException.h>
 
 #include "IMessenger.h"
+#include "IBrokerConnection.h"
 
 namespace messenger {
 
@@ -64,9 +65,9 @@ namespace messenger {
  * its cms includes that can be complicated to handle by the library users.
  * This class is notified when Exception occurs in the broker.
  */
-class Messenger : 	public ExceptionListener,
-					public MessageListener,
-					public DefaultTransportListener,
+class Messenger : 	public cms::ExceptionListener,
+					public cms::MessageListener,
+					public activemq::transport::DefaultTransportListener,
 					public IMessenger,
 					public cpputil::logger::Loggable {
 
@@ -81,6 +82,13 @@ public:
 	 * @param clientAck if true, clients will receive ack for each message they send.
 	 * @param persistent if true, the messages will be persistent on the broker.
 	 */
+	Messenger(
+			IBrokerConnection* brokerConnection,
+			const std::string& destURI,
+			const std::string& origURI,
+			bool useTopic = true,
+			bool persistent = true);
+
 	Messenger(
 			const std::string& brokerURI,
 			const std::string& destURI,
@@ -109,12 +117,12 @@ public:
 	 * This method is a callback that will be called when new messages arrive from the broker
 	 * @param message The message that just arrives.
 	 */
-	virtual void onMessage( const Message* message ) throw();
+	virtual void onMessage( const cms::Message* message ) throw();
 
 	/**
 	 * This method is a callback that will be called whwn Exceptions arrive from the broker.
 	 */
-	virtual void onException( const CMSException& ex AMQCPP_UNUSED );
+	virtual void onException( const cms::CMSException& ex AMQCPP_UNUSED );
 
 	/**
 	 * This method is callback that wil be called when the transport stream is interrupted.
@@ -131,7 +139,7 @@ private:
 	void cleanup();
 
 private:
-	cms::Connection* connection;
+	//cms::Connection* connection;
 	cms::Session* session;
 	cms::Destination* destinationConsumer;
 	cms::Destination* destinationProducer;
@@ -143,9 +151,9 @@ private:
 	std::string origURI;
 
 	bool useTopic;
-	bool clientAck;
 	bool persistent;
 	IMessengerListener* msgListener;
+	IBrokerConnection* brokerConnection;
 
 };
 
