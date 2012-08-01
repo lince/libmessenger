@@ -24,6 +24,8 @@
  * DEALINGS IN THE SOFTWARE.
  */
 
+#include <activemq/library/ActiveMQCPP.h>
+
 #include "../include/MessengerFactory.h"
 
 #include "../include/Messenger.h"
@@ -31,8 +33,16 @@
 
 namespace messenger {
 
+bool MessengerFactory::initialized = false;
+
 MessengerFactory::MessengerFactory()
 		: cpputil::logger::Loggable("messenger::MessengerFactory") {
+
+	if (!initialized) {
+		info("Initializing the Activemq Library");
+		activemq::library::ActiveMQCPP::initializeLibrary();
+		initialized = true;
+	}
 
 	// TODO Auto-generated constructor stub
 }

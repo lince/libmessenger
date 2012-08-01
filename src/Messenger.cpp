@@ -66,6 +66,7 @@ Messenger::Messenger(
 
 	this->useTopic = useTopic;
 	this->persistent = persistent;
+	this->session = NULL;
 }
 
 Messenger::Messenger(
@@ -78,12 +79,7 @@ Messenger::Messenger(
 
 	trace("begin constructor without IBrokerConnection");
 
-	static bool isInitialized = false;
-	//TODO: sincronizacao
-	if (!isInitialized) {
-		activemq::library::ActiveMQCPP::initializeLibrary();
-		isInitialized =  true;
-	}
+	this->brokerConnection = new BrokerConnection(brokerURI, clientAck);
 
 	//connection = NULL;
 	//session = NULL;
@@ -100,6 +96,7 @@ Messenger::Messenger(
 	this->useTopic = useTopic;
 	//this->clientAck = clientAck;
 	this->persistent = persistent;
+	this->session = NULL;
 }
 
 Messenger::~Messenger() throw() {
@@ -120,9 +117,11 @@ void Messenger::connect() {
 
 	if (!brokerConnection->isConnected()) {
 		brokerConnection->connect();
-		BrokerConnection* bConnection = dynamic_cast<BrokerConnection*>(brokerConnection);
-		session = bConnection->getCMSSession();
+
 	}
+
+	BrokerConnection* bConnection = dynamic_cast<BrokerConnection*>(brokerConnection);
+	this->session = bConnection->getCMSSession();
 
 	try {
 
@@ -167,7 +166,7 @@ void Messenger::sendMessage(const std::string& strMessage) {
 	trace("sendMessage(cons string&)");
 
 	try {
-	    TextMessage* message = session->createTextMessage( strMessage );
+	    TextMessage* message = this->session->createTextMessage( strMessage );
 	    producer->send( message );
 		delete message;
 	} catch (cms::CMSException& e) {

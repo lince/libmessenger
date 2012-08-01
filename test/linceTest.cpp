@@ -8,7 +8,7 @@
 #include <iostream>
 using namespace std;
 
-#include "../include/Messenger.h"
+#include "../include/MessengerFactory.h"
 using namespace messenger;
 
 
@@ -22,7 +22,7 @@ class SimpleListener : public IMessengerListener {
 
 int main(int argc, char* argv[]) {
 	std::string brokerURI =
-			"failover:(tcp://200.18.98.23:61616?jms.watchTopicAdvisories=false"
+			"failover:(tcp://localhost:61616?jms.watchTopicAdvisories=false"
 			//        "&wireFormat=openwire"
 			//        "&connection.useAsyncSend=true"
 			//        "&transport.commandTracingEnabled=true"
@@ -31,7 +31,7 @@ int main(int argc, char* argv[]) {
 			")";
 
     std::string destURI = "TVMONITOR.TUNER0.C";
-    std::string origURI = "TVMONITOR.TUNER0.P";
+    std::string origURI = "TVMONITOR.TUNER0.C";
 
     cout << "This is a message before the constructor." << endl;
 
@@ -39,14 +39,16 @@ int main(int argc, char* argv[]) {
 			" : \"Alguma coisa aconteceu?\", \"options\" : [ { \"id\" : 1, \"label\" "
 			": \"Sim\" }, { \"id\" : 2, \"label\" : \"Nao\" } ], \"type\" : \"multiply\" } }";
 
-	Messenger* messenger = new Messenger(brokerURI, destURI, destURI);
+	MessengerFactory factory;
+
+	IMessenger* messenger = factory.CreateMessenger(brokerURI, destURI, destURI);
 	messenger->setMessengerListener( new SimpleListener() );
 	messenger->connect();
 
-	//sleep(1);
+	sleep(1);
 	std::cout << "Vamos enviar a mensagem: " << std::endl;
 	messenger->sendMessage(str);
-	std::cout << "Mensgem enviada!" << std::endl;
+	std::cout << "Mensagem enviada!" << std::endl;
 	sleep(1);
 
 	messenger->disconnect();

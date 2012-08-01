@@ -39,6 +39,9 @@ namespace messenger {
  */
 class MessengerFactory : public cpputil::logger::Loggable {
 
+private:
+	static bool initialized;
+
 public:
 	/**
 	 * Constructor
