@@ -14,9 +14,17 @@ using namespace messenger;
 
 class SimpleListener : public IMessengerListener {
 
-	virtual void receiveMessage( const string& messageStr ) {
-		std::cout << messageStr << std::endl;
+public:
+	SimpleListener(std::string id) {
+		this->id = id;
 	}
+
+	virtual void receiveMessage( const string& messageStr ) {
+		std::cout << "<" << id << ">:" << messageStr << std::endl;
+	}
+
+private:
+	std::string id;
 
 };
 
@@ -30,8 +38,9 @@ int main(int argc, char* argv[]) {
 			//        "&wireFormat.tightEncodingEnabled=true"
 			")";
 
-    std::string destURI = "TVMONITOR.TUNER0.C";
-    std::string origURI = "TVMONITOR.TUNER0.C";
+    std::string topic1 = "TEST.MULTIPLY_1";
+    std::string topic2 = "TEST.MULTIPLY_3";
+
 
     cout << "This is a message before the constructor." << endl;
 
@@ -39,19 +48,29 @@ int main(int argc, char* argv[]) {
 			" : \"Alguma coisa aconteceu?\", \"options\" : [ { \"id\" : 1, \"label\" "
 			": \"Sim\" }, { \"id\" : 2, \"label\" : \"Nao\" } ], \"type\" : \"multiply\" } }";
 
-	MessengerFactory* factory = new MessengerFactory;
+	MessengerFactory factory;
 
-	IMessenger* messenger = factory->CreateMessenger(brokerURI, destURI, destURI);
-	messenger->setMessengerListener( new SimpleListener() );
-	messenger->connect();
+	IBrokerConnection* conn = factory.CreateBrokerConnection(brokerURI);
+	conn->connect();
+
+	IMessenger* messenger1 = factory.CreateMessenger(conn, topic1, topic1);
+	messenger1->setMessengerListener( new SimpleListener("Listener1") );
+	messenger1->connect();
+
+	IMessenger* messenger2 = factory.CreateMessenger(conn, topic2, topic2);
+	messenger2->setMessengerListener( new SimpleListener("Listener2") );
+	messenger2->connect();
 
 	sleep(1);
 	std::cout << "Vamos enviar a mensagem: " << std::endl;
-	messenger->sendMessage(str);
+	messenger1->sendMessage(str);
+	messenger2->sendMessage(str);
 	std::cout << "Mensagem enviada!" << std::endl;
 	sleep(1);
 
-	messenger->disconnect();
+	messenger1->disconnect();
+	messenger2->disconnect();
+	conn->disconnect();
 	return 0;
 }
 

@@ -58,3 +58,6 @@ TARGET_LINK_LIBRARIES (amazontest messenger)
 
 ADD_EXECUTABLE(linceTest test/linceTest.cpp)
 TARGET_LINK_LIBRARIES (linceTest messenger)
+
+ADD_EXECUTABLE(multiplyTest test/multiplyTest.cpp)
+TARGET_LINK_LIBRARIES (multiplyTest messenger)

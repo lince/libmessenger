@@ -60,7 +60,7 @@ IMessenger *MessengerFactory::CreateMessenger(
 	return new Messenger(brokerURI, destURI, origURI, useTopic, clientAck, persistent);
 }
 
-IMessenger* CreateMessenger(
+IMessenger* MessengerFactory::CreateMessenger(
 			IBrokerConnection* connection,
 			const std::string& destURI,
 			const std::string& origURI,
@@ -71,7 +71,7 @@ IMessenger* CreateMessenger(
 
 }
 
-IBrokerConnection* CreateBrokerConnection(
+IBrokerConnection* MessengerFactory::CreateBrokerConnection(
 			const std::string& brokerURI,
 			bool clientAck) {
 

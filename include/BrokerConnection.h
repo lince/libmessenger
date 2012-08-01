@@ -81,7 +81,7 @@ public:
 
 	std::string getBrokerURI();
 
-	bool isClientAck();
+	virtual bool isClientAck();
 
 
 private:

@@ -116,12 +116,13 @@ void Messenger::connect() {
 	}
 
 	if (!brokerConnection->isConnected()) {
+		info("Conectando");
 		brokerConnection->connect();
 
 	}
 
 	BrokerConnection* bConnection = dynamic_cast<BrokerConnection*>(brokerConnection);
-	this->session = bConnection->getCMSSession();
+	session = bConnection->getCMSSession();
 
 	try {
 
@@ -206,12 +207,13 @@ void Messenger::onMessage( const Message* message ) throw() {
 			return;
 		}
 
-		message->acknowledge();
-		debug("Message Received: " + text);
+		if (brokerConnection->isClientAck()) {
+			message->acknowledge();
+		}
+		//info("Message Received: " + text);
 		msgListener->receiveMessage(text);
 
 	} catch (CMSException& e) {
-		//e.printStackTrace();
 		ostringstream ostr;
 		e.printStackTrace(ostr);
 		error(ostr.str());

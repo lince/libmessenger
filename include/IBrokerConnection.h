@@ -56,6 +56,8 @@ public:
 	 */
 	virtual bool isConnected() = 0;
 
+	virtual bool isClientAck() = 0;
+
 };
 
 }

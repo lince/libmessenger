@@ -137,9 +137,7 @@ bool BrokerConnection::isConnected() {
 cms::Connection* BrokerConnection::getCMSConnection() {
 	trace("getCMSConnection()");
 
-	if (connected) {
-		return this->connection;
-	} else {
+	if (!connected) {
 		error("Trying to get a cms::Connection from a a unconnected instance.");
 
 		throw cpputil::InitializationException(
@@ -148,14 +146,14 @@ cms::Connection* BrokerConnection::getCMSConnection() {
 				"getCMSConnection()");
 	}
 
+	return this->connection;
+
 }
 
 cms::Session* BrokerConnection::getCMSSession() {
 	trace("getCMSSession()");
 
-	if (connected) {
-		return this->session;
-	} else {
+	if (!connected) {
 		error("Trying to get a cms::Session from a a unconnected instance.");
 
 		throw cpputil::InitializationException(
@@ -163,6 +161,7 @@ cms::Session* BrokerConnection::getCMSSession() {
 				"messenger::BrokerConnection",
 				"getCMSSession()");
 	}
+	return this->session;
 
 }
 
