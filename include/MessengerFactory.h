@@ -43,6 +43,9 @@ private:
 	static bool initialized;
 
 public:
+	static void initialize();
+	static void shutdown();
+
 	/**
 	 * Constructor
 	 */

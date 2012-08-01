@@ -33,18 +33,26 @@
 
 namespace messenger {
 
+void MessengerFactory::initialize() {
+	if (!MessengerFactory::initialized) {
+		activemq::library::ActiveMQCPP::initializeLibrary();
+		initialized = true;
+	}
+}
+
+void MessengerFactory::shutdown() {
+	if (MessengerFactory::initialized) {
+		activemq::library::ActiveMQCPP::shutdownLibrary();
+		initialized = false;
+	}
+}
+
 bool MessengerFactory::initialized = false;
 
 MessengerFactory::MessengerFactory()
 		: cpputil::logger::Loggable("messenger::MessengerFactory") {
 
-	if (!initialized) {
-		info("Initializing the Activemq Library");
-		activemq::library::ActiveMQCPP::initializeLibrary();
-		initialized = true;
-	}
-
-	// TODO Auto-generated constructor stub
+	MessengerFactory::initialize();
 }
 
 MessengerFactory::~MessengerFactory() {
