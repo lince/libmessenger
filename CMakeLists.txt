@@ -35,7 +35,7 @@ SET(install_headers
 INCLUDE_DIRECTORIES(
 			${libmessenger_SOURCE_DIR}/include
 			/usr/local/include/activemq-cpp-3.5.0
-			/usr/local/apr/include/apr-1)
+			/usr/include/apr-1.0)
 
 # Compile Options
 ADD_LIBRARY(messenger ${src_files})
